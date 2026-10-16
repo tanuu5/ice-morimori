@@ -208,6 +208,10 @@ export class Game {
     if (act === 'endless') this.startEndless();
     else if (act === 'notebook') { this.screens.closeAll(); this.openNotebook(); }
     else if (act === 'resetYes') { this.screens.closeAll(); this.newGame(); }
+    // ノートの「とじる」・確認の「いいえ」：画面だけでなく状態も戻す（data-act="back" だと画面が閉じるだけで、
+    // 状態が notebook / confirm のまま残り、タッチのボタンが出ない・確認なしで「はじめから」になる）
+    else if (act === 'noteClose') { if (this.state === 'notebook') this.setState('play'); }
+    else if (act === 'confirmNo') { if (this.state === 'confirm') this.setState('title'); }
     else if (act === 'resultsNext') this.resultsNext();
     else if (act === 'shopNext') this.shopNext();
     else if (act.startsWith('buy:')) this.buy(act.slice(4));
@@ -460,7 +464,9 @@ export class Game {
 
   update_notebook() {
     const input = this.input;
-    if (input.pressed('notebook') || input.menu.back || input.pressed('pause')) { this.screens.closeAll(); this.setState('play'); }
+    // ノートの画面がどこかで閉じられていたら、営業にもどる（状態だけ残って操作できなくならないように）
+    if (!this.screens.isOpen('notebook')) { this.setState('play'); return; }
+    if (input.pressed('notebook') || input.menu.back || input.pressed('pause')) { this.setState('play'); return; }
     if (input.menu.left) this.onAction('notePrev');
     if (input.menu.right) this.onAction('noteNext');
   }
@@ -538,7 +544,7 @@ export class Game {
     if (!this.faceHold) this.robotFace(Math.sin(this.time * 0.7) > 0.6 ? 'wink' : 'happy', 0.5);
   }
   update_confirm() {
-    if (this.input.menu.back) { this.screens.closeAll(); this.setState('title'); }
+    if (!this.screens.isOpen('confirm') || this.input.menu.back) this.setState('title');
   }
   update_results(dt) {}
   update_shop() {}

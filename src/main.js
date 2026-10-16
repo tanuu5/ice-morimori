@@ -42,7 +42,7 @@ try {
   const touch = new TouchControls(ui, renderer.domElement, input, { stick: false, onPause: () => game.pauseFromTouch?.() });
   const lock = () => { if (POINTER_LOCK) input.lockPointer(); };
   const screens = new Screens(ui, {
-    onClick: (act) => audio.sfx(act === 'back' ? 'ui_back' : 'ui_ok'),
+    onClick: (act) => audio.sfx(act === 'back' || act === 'noteClose' || act === 'confirmNo' ? 'ui_back' : 'ui_ok'),
     onStart: () => { game.start(); lock(); },
     onContinue: () => { game.continueGame?.(); lock(); },   // セーブのある作品：screens.setContinue(true) で「つづきから」を出す
     onResume: () => { game.setState('play'); lock(); },

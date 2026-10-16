@@ -73,10 +73,10 @@ export function fillNotebook(screens, page, unlocked) {
       <button data-act="notePrev">${esc(t('note.prev'))}</button>
       <button data-act="noteNext">${esc(t('note.next'))}</button>
     </div>
-    <button data-act="back">${esc(t('ui.close'))}</button>`;
+    <button data-act="noteClose">${esc(t('ui.close'))}</button>`;
 }
 
 export function fillConfirm(screens, text, yes = 'confirmYes') {
   const el = screens.modals.confirm.querySelector('.card');
-  el.innerHTML = `<p class="q">${esc(text)}</p><div class="row2"><button data-act="${yes}">${esc(t('ui.yes'))}</button><button data-act="back">${esc(t('ui.no'))}</button></div>`;
+  el.innerHTML = `<p class="q">${esc(text)}</p><div class="row2"><button data-act="${yes}">${esc(t('ui.yes'))}</button><button data-act="confirmNo">${esc(t('ui.no'))}</button></div>`;
 }
