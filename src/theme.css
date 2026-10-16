@@ -1,0 +1,105 @@
+/* アイスもりもり の見た目：夏のパステル（空色・ミント・いちご・クリーム）、丸い太字、ころんとしたボタン。
+   構造は ui.css。ゲーム中の重ね（名札・伝票・会話）は game.css。 */
+:root {
+  --ink: #2d4a6b;
+  --paper: #fffaf0;
+  --cream: #fff3df;
+  --mint: #7fd6c2;
+  --mint-d: #4fb8a4;
+  --pink: #ff8fab;
+  --pink-d: #e8638a;
+  --sky: #8fd3ff;
+  --sun: #ffd166;
+  --accent: var(--pink);
+  --accent-ink: #ffffff;
+  --shade: rgba(28, 46, 70, 0.5);
+  --font: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'M PLUS Rounded 1c', system-ui, sans-serif;
+  --font-pop: 'Mochiy Pop One', 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', system-ui, sans-serif;
+}
+html, body { background: #8fd3ff; color: var(--ink); font: 500 16px/1.5 var(--font); }
+
+/* 読み込み中：アイスが 3 段、ぽよぽよ */
+#loading { background: linear-gradient(#8fd3ff, #c9ecff 60%, #fff3df); color: var(--ink); display: grid; place-items: center; align-content: center; gap: 18px; }
+#loading .ld-text { font-weight: 900; letter-spacing: 0.05em; }
+.ld-cone { position: relative; width: 60px; height: 96px; }
+.ld-cone::after { content: ''; position: absolute; left: 14px; bottom: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 46px solid #e0a35c; }
+.ld-cone i { position: absolute; left: 10px; width: 40px; height: 34px; border-radius: 50% 50% 44% 44%; animation: ld-bob 1.2s ease-in-out infinite; }
+.ld-cone i:nth-child(1) { bottom: 38px; background: #ffb3c4; }
+.ld-cone i:nth-child(2) { bottom: 62px; background: #fff1d2; animation-delay: 0.15s; }
+.ld-cone i:nth-child(3) { bottom: 86px; background: #9fdcff; animation-delay: 0.3s; }
+@keyframes ld-bob { 50% { transform: translateY(-5px); } }
+
+/* ページがまだ入力の受け手になっていないとき（Mac の Safari でアドレスバーから開いた直後など）の案内 */
+#focus-hint { position: absolute; left: 50%; bottom: calc(6vh + var(--safe-b, 0px)); transform: translateX(-50%); pointer-events: none;
+  padding: 0.5em 1.2em; border-radius: 999px; background: rgba(45, 74, 107, 0.75); border: 1px solid rgba(255, 255, 255, 0.4); color: #fff;
+  font-size: clamp(13px, 1.6vw, 16px); text-align: center; max-width: min(90vw, 36em); animation: focus-blink 2.4s ease-in-out infinite; }
+@keyframes focus-blink { 50% { opacity: 0.5; } }
+#paddiag { position: absolute; left: 8px; top: 8px; margin: 0; padding: 6px 8px; pointer-events: none; z-index: 60;
+  font: 11px/1.4 ui-monospace, Menlo, monospace; color: #fff; background: rgba(0, 0, 0, 0.7); white-space: pre-wrap; max-width: 92vw; }
+
+/* ボタン：白い丸、下にミントの影。選んでいる・ホバーはいちご色 */
+button { font: inherit; font-weight: 900; color: var(--ink); background: #ffffff; border: 0; border-radius: 999px;
+  padding: 0.62em 1.7em; min-width: 12em; cursor: pointer; box-shadow: 0 4px 0 var(--mint-d), 0 6px 14px rgba(28, 46, 70, 0.18); }
+button.gp-focus { background: var(--pink); color: #fff; box-shadow: 0 4px 0 var(--pink-d), 0 6px 14px rgba(28, 46, 70, 0.18); }
+@media (hover: hover) and (pointer: fine) { button:hover { background: var(--pink); color: #fff; box-shadow: 0 4px 0 var(--pink-d), 0 6px 14px rgba(28, 46, 70, 0.18); } }
+button:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--mint-d); }
+.gp-focus { outline: 3px solid #fff; }
+input[type="range"] { width: 10em; accent-color: var(--pink); }
+select { font: inherit; font-weight: 700; padding: 0.25em 0.5em; border-radius: 10px; border: 2px solid #e3eef3; background: #fff; color: var(--ink); }
+
+/* タイトル：左にロゴとメニュー、右に屋台（3D） */
+.screen#title { align-items: flex-start; justify-content: center; padding-left: calc(6vw + var(--safe-l)); gap: 0.2em; }
+#title::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 58%;
+  background: linear-gradient(90deg, rgba(255, 250, 240, 0.55), rgba(255, 250, 240, 0.0)); pointer-events: none; }
+#title h1 { margin: 0; font: 400 clamp(40px, 7.4vw, 92px)/1.05 var(--font-pop); color: #fff; letter-spacing: 0.02em;
+  -webkit-text-stroke: 0; text-shadow:
+    0 0 0 #fff, 3px 0 0 var(--pink), -3px 0 0 var(--pink), 0 3px 0 var(--pink), 0 -3px 0 var(--pink),
+    2px 2px 0 var(--pink), -2px 2px 0 var(--pink), 2px -2px 0 var(--pink), -2px -2px 0 var(--pink),
+    0 9px 0 var(--pink-d), 0 14px 18px rgba(28, 46, 70, 0.25); }
+#title h1::before { content: ''; display: inline-block; width: 0.62em; height: 0.95em; margin-right: 0.12em; vertical-align: -0.12em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 100'%3E%3Cpath d='M18 52 L32 98 L46 52 Z' fill='%23e0a35c' stroke='%23b8732f' stroke-width='3'/%3E%3Ccircle cx='32' cy='46' r='17' fill='%23ffb3c4'/%3E%3Ccircle cx='32' cy='28' r='15' fill='%23fff1d2'/%3E%3Ccircle cx='32' cy='12' r='12' fill='%239fdcff'/%3E%3Ccircle cx='38' cy='2.5' r='4' fill='%23e8213f'/%3E%3C/svg%3E") no-repeat center / contain; }
+#title .tagline { margin: 0.4em 0 1.1em 0.2em; color: var(--ink); font-weight: 900; font-size: clamp(14px, 1.7vw, 19px);
+  background: rgba(255, 255, 255, 0.78); padding: 0.2em 0.9em; border-radius: 999px; box-shadow: 0 3px 0 rgba(79, 184, 164, 0.6); }
+#title .menu { gap: 0.7em; align-items: stretch; }
+#title .menu button { min-width: 15em; }
+#title .copyright { font-size: 12px; color: var(--ink); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); letter-spacing: 0.04em; font-weight: 700; }
+#title .copyright .build { display: block; margin-top: 2px; font-size: 10px; opacity: 0.7; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+
+/* 重なる画面 */
+.modal { background: var(--shade); }
+.card { background: var(--paper); border-radius: 22px; padding: 1.3em 1.5em; gap: 0.65em; box-shadow: 0 8px 0 rgba(79, 184, 164, 0.55), 0 16px 40px rgba(20, 30, 50, 0.3); }
+.card h2 { margin: 0 0 0.3em; text-align: center; font: 400 1.5em/1.2 var(--font-pop); color: var(--pink-d); }
+.card button { min-width: 0; }
+.keys { margin: 0.4em 0 0.8em; }
+.card .howto-steps { margin: 0.2em 0 0.4em; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0.55em; }
+.card .howto-steps li { display: grid; grid-template-columns: 2.2em 1fr; gap: 0.6em; align-items: start; font-weight: 700; line-height: 1.55; }
+.card .howto-steps li b { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%; background: var(--mint); color: #fff; font-weight: 900; }
+
+/* ゲーム中の表示 */
+#hud .score { display: none; }
+#hud .hints { color: #fff; font-size: 13px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); }
+
+/* ボタンの絵 */
+.gl { background: rgba(45, 74, 107, 0.88); color: #fff; }
+.card .gl { background: var(--ink); }
+
+/* タッチ操作 */
+#touch .tbtn { background: rgba(255, 255, 255, 0.9); color: var(--ink); font-size: 13px; font-weight: 900; box-shadow: 0 4px 0 var(--mint-d); }
+#touch .tbtn.on { background: var(--pink); color: #fff; box-shadow: 0 2px 0 var(--pink-d); }
+#touch .tbtn.slot-0 { font-size: 16px; background: #fff3bf; }
+#touch .tbtn.pause { font-size: 16px; }
+
+/* 縦長の画面：タイトルは上にロゴ、下にメニュー */
+@media (max-aspect-ratio: 4/5) {
+  .screen#title { align-items: center; justify-content: flex-start; padding: calc(9vh + var(--safe-t)) 16px calc(16px + var(--safe-b)); }
+  #title::before { width: 100%; height: 48%; background: linear-gradient(rgba(255, 250, 240, 0.55), rgba(255, 250, 240, 0)); }
+  #title .menu { margin-top: auto; margin-bottom: 7vh; }
+  #title h1 { text-align: center; }
+}
+@media (max-height: 480px) {
+  #title h1 { font-size: clamp(30px, 8vh, 52px); }
+  #title .tagline { margin-bottom: 0.5em; }
+  #title .menu { gap: 0.4em; }
+  button { padding: 0.45em 1.4em; }
+}
+.card .note { font-size: 13px; opacity: 0.75; margin: 0; }

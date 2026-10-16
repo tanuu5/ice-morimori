@@ -1,0 +1,191 @@
+/* ゲーム中の重ね（調理台の名札・ゲージ・評価の文字）。位置は CounterUI が transform で決める */
+#ui #cui { position: absolute; inset: 0; pointer-events: none; }
+#cui .tags { position: absolute; inset: 0; }
+#cui .tag { position: absolute; left: 0; top: 0; pointer-events: auto; min-width: 0; padding: 0.18em 0.6em 0.18em 0.35em; font-size: 12px;
+  display: inline-flex; align-items: center; gap: 0.3em; border-radius: 999px; background: rgba(255, 255, 255, 0.88); color: #2d4a6b;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); white-space: nowrap; touch-action: none; }
+#cui .tag i { width: 0.9em; height: 0.9em; border-radius: 50%; display: inline-block; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
+#cui .tag.on { background: #ff8fab; color: #fff; outline: 2px solid #fff; }
+#cui .tag.dim { opacity: 0.45; }
+#cui .gauge { position: absolute; left: 0; top: 0; overflow: visible; }
+#cui .gauge circle { fill: none; stroke-width: 7; transform: rotate(-90deg); transform-origin: 50% 50%; stroke-linecap: round; }
+#cui .gauge .g-bg { stroke: rgba(255, 255, 255, 0.55); }
+#cui .gauge .g-sweet { stroke: #ffe066; stroke-linecap: butt; }
+#cui .gauge .g-fill { stroke: #ff8fab; }
+#cui .gauge.sweet .g-fill { stroke: #5fd3a8; }
+#cui .gauge.over .g-fill { stroke: #ff6b6b; }
+#cui .pops { position: absolute; inset: 0; }
+#cui .pop { position: absolute; left: 0; top: 0; font: 900 26px/1 var(--font); color: #fff; white-space: nowrap;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.25); letter-spacing: 0.02em; }
+#cui .pop.perfect { color: #ffe066; -webkit-text-stroke: 1.5px #e8590c; font-size: 32px; }
+#cui .pop.good { color: #96f2d7; -webkit-text-stroke: 1px #0ca678; }
+#cui .pop.nice { color: #fff; font-size: 18px; -webkit-text-stroke: 1px #5fd3a8; }
+#cui .pop.miss { color: #ced4da; -webkit-text-stroke: 1px #495057; }
+#cui .pop.hold { color: #fff; font-size: 18px; -webkit-text-stroke: 1px #f03e3e; }
+
+/* 上の帯 */
+#hud .bar { position: absolute; top: calc(8px + var(--safe-t)); left: calc(10px + var(--safe-l)); right: calc(66px + var(--safe-r)); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+#hud .bar > div { background: rgba(255, 255, 255, 0.86); color: #2d4a6b; border-radius: 999px; padding: 4px 12px; font-weight: 800; font-size: 14px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+#hud .bar .d { color: #ff6b9a; letter-spacing: 0.04em; }
+#hud .bar .loc { font-weight: 700; }
+#hud .bar .money .m { font-variant-numeric: tabular-nums; }
+#hud .bar .money .goal { font-weight: 700; opacity: 0.6; font-size: 12px; }
+#hud .bar .meter { display: inline-block; width: 64px; height: 8px; border-radius: 99px; background: #e9ecef; overflow: hidden; }
+#hud .bar .meter b { display: block; height: 100%; background: linear-gradient(90deg, #ffd166, #ff8fab); }
+#hud.reached .bar .meter b { background: linear-gradient(90deg, #63e6be, #20c997); }
+#hud .hints { color: #fff; font-weight: 700; }
+
+/* 吹き出し */
+#ui #talk { position: absolute; top: calc(48px + var(--safe-t)); left: calc(10px + var(--safe-l)); width: min(420px, calc(100% - 20px)); pointer-events: none;
+  background: rgba(255, 255, 255, 0.95); color: #2d3a4a; border-radius: 16px; padding: 22px 16px 12px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12); font-size: 16px; line-height: 1.55; }
+#talk .who { position: absolute; top: -12px; left: 12px; color: #fff; font-weight: 800; font-size: 13px; padding: 2px 12px; border-radius: 999px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
+#talk .text { min-height: 1.55em; font-weight: 700; }
+#talk .wait { margin-top: 8px; height: 6px; border-radius: 99px; background: #e9ecef; overflow: hidden; }
+#talk .wait b { display: block; height: 100%; background: #63e6be; }
+#talk .wait.low b { background: #ff8787; }
+#talk .next { position: absolute; right: 12px; bottom: 6px; font-size: 11px; color: #ff8fab; opacity: 0; }
+#talk.done .next { opacity: 0; }
+
+/* 伝票 */
+#ui #ticket { position: absolute; top: calc(52px + var(--safe-t)); right: calc(10px + var(--safe-r)); width: 172px; pointer-events: none;
+  background: #fffdf7; color: #2d3a4a; border-radius: 6px 6px 14px 14px; padding: 10px 12px 12px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+  background-image: repeating-linear-gradient(0deg, transparent 0 25px, rgba(127, 214, 194, 0.18) 25px 26px); border-top: 6px solid #7fd6c2; }
+#ticket .head { display: flex; justify-content: space-between; align-items: baseline; font-weight: 900; margin-bottom: 4px; }
+#ticket .head small { font-size: 11px; color: #ff6b9a; font-weight: 800; }
+#ticket .row { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; height: 26px; }
+#ticket .row .dot { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.18); display: inline-grid; place-items: center; font-style: normal; font-size: 11px; color: #fff; }
+#ticket .row .dot.q { background: #b197fc; }
+#ticket .row .dot.any { background: #ffd166; }
+#ticket .row span { flex: 1; }
+#ticket .row .mark, #ticket .row .cnt { font-size: 14px; }
+#ticket .row.ok { color: #20c997; }
+#ticket .row.ng { color: #fa5252; }
+#ticket .tops { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+#ticket .tops .top { font-size: 12px; font-weight: 700; background: #fff0f6; color: #d6336c; border-radius: 99px; padding: 1px 8px; }
+#ticket .tops .top i { font-style: normal; margin-right: 3px; }
+#ticket .vessel { margin-top: 6px; font-size: 12px; font-weight: 800; opacity: 0.8; }
+
+/* 評価のカード */
+#ui #rating { position: absolute; left: 50%; top: 22%; transform: translateX(-50%); pointer-events: none; text-align: center;
+  background: rgba(255, 255, 255, 0.95); border-radius: 18px; padding: 10px 22px 12px; box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12); color: #2d3a4a; }
+#rating .stars i { font-style: normal; font-size: 30px; color: #dee2e6; margin: 0 1px; }
+#rating .stars i.on { color: #ffc93c; text-shadow: 0 2px 0 #e8590c33; }
+#rating .pay { font-weight: 900; font-size: 20px; color: #2b8a3e; }
+#rating .pay small { font-size: 13px; color: #868e96; }
+#rating .pay .hearts { color: #ff6b9a; }
+#cui .tag.top i { display: inline-grid; place-items: center; color: #fff; font-style: normal; font-size: 9px; width: 1.2em; height: 1.2em; }
+#cui .tag.done { opacity: 0.55; }
+#cui .tag.done span::after { content: ' ✓'; color: #20c997; }
+/* トッピングの棚（画面下）と切り替えのボタン */
+#cui .tray { position: absolute; left: 50%; bottom: calc(46px + var(--safe-b)); transform: translateX(-50%); display: flex; gap: 8px; pointer-events: auto; }
+#cui .tbtn2 { min-width: 0; padding: 6px 12px 6px 8px; border-radius: 14px; background: rgba(255, 255, 255, 0.92); color: #2d4a6b; font-size: 13px;
+  display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 6px; align-items: center; text-align: left; touch-action: none; }
+#cui .tbtn2 i { grid-row: 1 / 3; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 14px; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15); }
+#cui .tbtn2 span { font-weight: 800; }
+#cui .tbtn2 .mode { font-style: normal; font-size: 10px; opacity: 0.6; font-weight: 700; }
+#cui .tbtn2.on { background: #ff8fab; color: #fff; outline: 2px solid #fff; }
+#cui .tbtn2.done { opacity: 0.55; }
+#cui .tbtn2.done span::after { content: ' ✓'; }
+#cui .tbtn2.dim { opacity: 0.5; }
+#cui .shelfBtn { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(46px + var(--safe-b)); pointer-events: auto; min-width: 0; font-size: 13px;
+  padding: 8px 14px; background: #fff3bf; color: #8a5a00; }
+[data-device="touch"] #cui .shelfBtn { display: none; }
+
+/* 物語の会話（画面下） */
+#ui #story { position: absolute; left: 50%; bottom: calc(18px + var(--safe-b)); transform: translateX(-50%); width: min(720px, calc(100% - 24px));
+  background: rgba(255, 255, 255, 0.96); color: #2d3a4a; border-radius: 18px; padding: 26px 22px 18px; box-shadow: 0 8px 0 rgba(0, 0, 0, 0.14);
+  font-size: 17px; line-height: 1.7; font-weight: 700; cursor: pointer; min-height: 6.2em; z-index: 5; }
+#story .who { position: absolute; top: -14px; left: 18px; color: #fff; font-size: 14px; font-weight: 800; padding: 3px 14px; border-radius: 999px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
+#story.narration { background: rgba(30, 40, 60, 0.82); color: #fff; font-weight: 600; text-align: center; }
+#story .next { position: absolute; right: 16px; bottom: 8px; font-size: 12px; color: #ff8fab; opacity: 0; display: flex; gap: 4px; align-items: center; }
+#story.done .next { opacity: 1; }
+/* 日の見出し */
+#ui #daycard { position: absolute; left: 50%; top: 22%; transform: translate(-50%, -50%); pointer-events: none; text-align: center; color: #fff;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, 0.18), 0 0 24px rgba(0, 0, 0, 0.25); }
+#daycard .d { font: 900 22px/1 var(--font); letter-spacing: 0.3em; color: #fff3bf; }
+#daycard .loc { font: 900 clamp(32px, 7vw, 64px)/1.2 var(--font-pop, var(--font)); margin: 8px 0; }
+#daycard .sub { font-weight: 800; font-size: 16px; background: rgba(0, 0, 0, 0.25); display: inline-block; padding: 3px 14px; border-radius: 999px; }
+
+/* 結果・ショップ・ノート・確認 */
+.card.results, .card.shop, .card.notebook { width: min(30em, 100%); }
+.card.results h2 { color: #ff6b9a; }
+.card .sub { margin: -6px 0 6px; text-align: center; font-weight: 700; opacity: 0.7; }
+.card.results .big { text-align: center; font: 900 36px/1.1 var(--font); color: #2d4a6b; }
+.card.results .big small { font-size: 14px; opacity: 0.6; }
+.card.results .big.ok { color: #20a070; }
+.card.results .medal { text-align: center; font-weight: 900; color: #e8590c; font-size: 18px; }
+.card.results .miss { text-align: center; font-weight: 700; opacity: 0.6; }
+.card .stats { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 8px 0; }
+.card .stats dt { font-weight: 700; opacity: 0.65; }
+.card .stats dd { margin: 0; font-weight: 800; text-align: right; }
+.card .stats .stars i { font-style: normal; color: #dee2e6; }
+.card .stats .stars i.on { color: #ffc93c; }
+.card .stats .hearts { color: #ff6b9a; }
+.card .wallet { text-align: center; font-weight: 800; margin: 4px 0 8px; color: #2b8a3e; }
+.card.shop .items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.card.shop .item { display: grid; grid-template-columns: 40px 1fr auto; gap: 10px; align-items: center; background: #f8f9fa; border-radius: 12px; padding: 8px 10px; }
+.card.shop .ico { font-style: normal; width: 36px; height: 36px; border-radius: 50%; background: #7fd6c2; color: #fff; display: grid; place-items: center; font-size: 18px; }
+.card.shop .info { display: flex; flex-direction: column; }
+.card.shop .info small { opacity: 0.7; font-size: 12px; }
+.card.shop .pips { display: flex; gap: 3px; margin-top: 3px; }
+.card.shop .pips b { width: 14px; height: 5px; border-radius: 3px; background: #dee2e6; }
+.card.shop .pips b.on { background: #20c997; }
+.card.shop .item button { min-width: 0; padding: 0.4em 1em; }
+.card.shop .item button[disabled] { opacity: 0.4; cursor: default; }
+.card.shop .maxed { font-style: normal; font-weight: 900; color: #20c997; padding: 0 0.6em; }
+.card.notebook { background: #fffaf0; background-image: repeating-linear-gradient(0deg, transparent 0 27px, rgba(255, 143, 171, 0.18) 27px 28px); }
+.card.notebook .tabs { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.card.notebook .tab { min-width: 0; width: 2.2em; padding: 0.2em 0; font-size: 13px; }
+.card.notebook .tab.on { background: #ff8fab; color: #fff; }
+.card.notebook .tab[disabled] { opacity: 0.3; }
+.card.notebook .page { min-height: 10em; padding: 6px 4px; }
+.card.notebook .page h3 { margin: 4px 0 6px; color: #d6336c; }
+.card.notebook .page p { margin: 0; line-height: 1.8; font-weight: 600; }
+.card .row2 { display: flex; gap: 8px; }
+.card .row2 button { flex: 1; }
+.card.confirm .q { font-weight: 700; text-align: center; }
+
+/* 操作のヒント */
+#ui #hint { position: absolute; left: calc(10px + var(--safe-l)); top: calc(56px + var(--safe-t)); pointer-events: none; z-index: 4;
+  display: flex; align-items: center; gap: 8px; max-width: min(560px, calc(100% - 24px));
+  background: #fff3bf; color: #5c3d00; font-weight: 900; font-size: 15px; padding: 8px 16px 8px 8px; border-radius: 16px;
+  box-shadow: 0 4px 0 #f0b429, 0 8px 20px rgba(0, 0, 0, 0.18); }
+#hint .i { flex: none; width: 26px; height: 26px; border-radius: 50%; background: #ff922b; color: #fff; display: grid; place-items: center; font-size: 15px; }
+#hint .g .gl { font-size: 13px; }
+#hint .tx { text-wrap: balance; }
+[data-device="touch"] #hint .g { display: none; }
+
+/* 縦長の画面：ヒントは下（トッピングの棚の上）に */
+@media (max-aspect-ratio: 4/5) {
+  #ui #hint { top: auto; bottom: calc(150px + var(--safe-b)); font-size: 14px; }
+}
+
+/* ---- 縦長の画面（スマホ縦） */
+@media (max-aspect-ratio: 3/4) {
+  #hud .bar { gap: 6px; right: calc(60px + var(--safe-r)); }
+  #hud .bar > div { font-size: 12px; padding: 3px 10px; }
+  #hud .bar .meter { width: 44px; }
+  #ui #talk { top: calc(78px + var(--safe-t)); left: calc(8px + var(--safe-l)); right: calc(8px + var(--safe-r)); width: auto; font-size: 14px; padding: 18px 12px 10px; }
+  #ui #ticket { top: calc(178px + var(--safe-t)); right: calc(8px + var(--safe-r)); width: 136px; padding: 8px 10px; }
+  #ticket .row { height: 22px; font-size: 13px; }
+  #ui #hint { left: calc(8px + var(--safe-l)); right: auto; bottom: calc(24px + var(--safe-b)); top: auto; max-width: 44%; font-size: 13px; }
+  #cui .tag { font-size: 11px; padding: 0.12em 0.5em 0.12em 0.3em; }
+  #cui .tray { left: calc(8px + var(--safe-l)); transform: none; bottom: calc(150px + var(--safe-b)); flex-wrap: wrap; max-width: 58%; }
+  #cui .tbtn2 { padding: 4px 8px 4px 6px; font-size: 12px; }
+  #cui .tbtn2 i { width: 22px; height: 22px; font-size: 12px; }
+  #ui #story { font-size: 15px; bottom: calc(14px + var(--safe-b)); }
+  #ui #rating { top: 30%; }
+}
+
+/* すてる（長押し）のボタン：押しているあいだ、赤い帯がのびる */
+#cui .tossBtn { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(92px + var(--safe-b)); pointer-events: auto; min-width: 0; font-size: 13px;
+  padding: 8px 14px; background: #ffffff; color: #c92a2a; overflow: hidden; touch-action: none; }
+#cui .tossBtn .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: #ffc9c9; pointer-events: none; }
+#cui .tossBtn span { position: relative; }
+#cui .tossBtn.holding { background: #fff5f5; }
+[data-device="touch"] #cui .tossBtn { display: none; }
+/* タッチのボタンの長押しの進み具合 */
+#touch .tbtn.prog { background: conic-gradient(#e03131 calc(var(--p) * 1turn), var(--pink) 0); color: #fff; }
+/* すてるのボタンは 2 行（「長押し」を添える） */
+#touch .tbtn.slot-3 { white-space: pre-line; line-height: 1.2; }
